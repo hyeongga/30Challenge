@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"  //planet scale 쓰기 위해서 입력
+}
+
+model User {
+  id Int @id @default(autoincrement()) //@id내에 nuique 속성 포함됨
+  account String @unique  //unique 는 중복된 값 못가지게함
+  name String? 
+  todos Todo[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Todo {
+  id Int @id @default(autoincrement())
+  todo String
+  isDone Boolean
+  user User @relation(fields:[userId], references: [id]) //모델을 타입으로 가지고 올 수 있음 (id(user테이블에있는값)을 가지고와서 userId로 사용)
+  userId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])  //검색 효율 증가 역할 mysql에서 작성하지 않으면 오류발생 (postgresql쓰면 사용안해도 됨)
+}
