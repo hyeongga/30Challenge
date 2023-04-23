@@ -21,6 +21,9 @@ router.get("/:userId", async (req, res) => {
       where: {
         userId: parseInt(userId),
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     res.json({ ok: true, todos });
   } catch (error) {
@@ -90,7 +93,7 @@ router.put("/:id/done", async (req, res) => {
         isDone: !existTodo.isDone,
       },
     });
-    req.json({ ok: true, updatedTodo });
+    res.json({ ok: true, updatedTodo });
   } catch (eroor) {
     console.error(error);
   }
